@@ -1,17 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import BlockChart from './components/blockChart';
+import './css/index.css'
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+export default function R12App () {
+    const [inputValue,setInputValue] = useState({
+        ui:22,
+        ux:33,
+        data:85,
+    })
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+    const refValue = useRef(null)
+
+    useEffect(()=> {
+        refValue.current.focus()
+    },[])
+
+    let inputData = [
+        { nameID: "ui", bgColor : "blue", status: inputValue.ui},
+        { nameID: "ux", bgColor : "orange", status : inputValue.ux},
+        { nameID: "data", bgColor : "yellow", status : inputValue.data}
+    ]
+
+
+    return (
+       <div className="wrapper">
+            <h1>Progress Bar</h1>
+            <ul>Project status:
+                <li>UI status <input type="number" min={0} max={100} ref={refValue} value={inputValue.ui} onChange={(e) => setInputValue({...inputValue, ui: e.target.value})}/></li>
+                <li>UX status <input type="number" min={0} max={100} value={inputValue.ux} onChange={(e) => setInputValue({...inputValue, ui: e.target.value})}/></li>
+                <li>DATA status <input type="number" min={0} max={100} value={inputValue.data} onChange={(e) => setInputValue({...inputValue, ui: e.target.value})}/></li>
+            </ul>
+            {inputData.map(
+            (inputData, index) => (
+                <BlockChart key={index} nameID={inputData.nameID} value={inputData.status} kolor={inputData.bgColor} />
+            )   
+            )}
+            
+       </div>
+    )
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'))
+root.render(<R12App />)
